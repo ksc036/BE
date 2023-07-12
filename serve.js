@@ -1,61 +1,59 @@
-import express from "express";
-import http from "http";
-import cors from 'cors';
+// import express from "express";
+// import http from "http";
+// import cors from 'cors';
 
-// const express = require("express");
-// const http = require("http");
-// const cors = require("cors");
+const express = require("express");
+const http = require("http");
+const cors = require("cors");
 // import WebSocket,{WebSocketServer} from "ws";
-import {Server, Socket} from 'socket.io'; 
+// import {Server, Socket} from 'socket.io'; 
 
 
 const app = express();
 
-app.use(cors({ origin: 'http://localhost:8080'}));
+// app.use(cors({ origin: 'http://localhost:8080'}));
 app.get("/",(req,res) => res.send("change"));
  
 
 
 const httpServer = http.createServer(app);
-const wsServer = new Server(httpServer,{
-    cors:{
-        origin :  'http://localhost:8080',
-        // methods : ["GET", "POST"],
-        credentials : true
-    }
+var io = require('socket.io')(httpServer, {
+    cors: {
+        origin: "http://localhost:8080",
+        methods: ["GET", "POST"],
+        transports: ['websocket', 'polling'],
+        credentials: true
+    },
+    allowEIO3: true
 });
 
-// var io = require('socket.io')(httpServer);
-
 //setting cors 
-// app.all('/*', function(req, res, next) {
-//     res.header("Access-Control-Allow-Origin", 'http://localhost:8080');
-//     res.header("Access-Control-Allow-Headers", "X-Requested-With");
-//     next();
-// });
+app.all('/*', function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", 'http://localhost:8080');
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    next();
+});
 
 //connection event handler
-// io.on('connection' , function(socket) {
-//     console.log('Connect from Client: '+socket)
+io.on('connection' , function(socket) {
+    console.log("someone Join");
+    socket.on('enter_room', (roomName,showRoom) => {
+        console.log(roomName);
+        showRoom();
+        socket.to(roomName).emit("welcome");
+    });
 
-//     socket.on('chat', function(data){
-//         console.log('message from Client: '+data.message)
-
-//         var rtnMessage = {
-//             message: data.message
-//         };
-
-//         // 클라이언트에게 메시지를 전송한다
-//         socket.broadcast.emit('chat', rtnMessage);
-//     });
-
-// })
+})
 
 const handleListen = () => console.log("Listening on 9000");
 httpServer.listen(9000, handleListen);
-
-
-//webSocket
+// const wsServer = new Server(httpServer,{
+//     cors:{
+//         origin :  'http://localhost:8080',
+//         // methods : ["GET", "POST"],
+//         credentials : true
+//     }
+// });
 
 // wsServer.on("conntection", socket =>{
 //     console.log(socket);
