@@ -10,7 +10,9 @@ const cors = require("cors");
 
 
 const app = express();
-const uri = "http://localhost:8081";
+// const uri = "http://localhost:8081";
+const uri = "*";
+
 // app.use(cors({ origin: 'http://localhost:8080'}));
 app.get("/",(req,res) => res.send("change"));
  
@@ -38,46 +40,26 @@ app.all('/*', function(req, res, next) {
 io.on('connection' , function(socket) {
     // console.log("someone Join");
     // console.log(io.sockets.adapter.rooms);
+    console.log(io.sockets.adapter);
 
     socket.on('enter_room', (roomName,showRoom) => {
-        console.log(roomName);
-        showRoom();
-        // socket.to(roomName).emit("welcome",roomName);
         socket.join(roomName);
-        // socket.emit("welcome","방에 들어왔습니다.");
-        socket.to(roomName).emit("welcome", "이게 진짜다.")
+        showRoom();
+        socket.to(roomName).emit("welcome");
         // console.log(socket.to(roomName));
     });
-    socket.on('msg', (roomName,msg) => {
-        console.log(roomName,msg);
-        socket.emit("welcome",msg);
+    socket.on('new_message', (roomName,nickname,message,done) => {
+        // console.log(roomName);
+        socket.to(roomName).emit("new_message",nickname,message);
+        done(message);
     });
+    socket.on("disconnecting", () =>{
+        socket.rooms.forEach(room => {
+            socket.to(room).emit("bye");
+        });
+    })
 
 })
 
 const handleListen = () => console.log("Listening on 9000");
 httpServer.listen(9000, handleListen);
-// const wsServer = new Server(httpServer,{
-//     cors:{
-//         origin :  'http://localhost:8080',
-//         // methods : ["GET", "POST"],
-//         credentials : true
-//     }
-// });
-
-// wsServer.on("conntection", socket =>{
-//     console.log(socket);
-// })
-// const wss = new WebSocketServer({server});
-// wss.on("connection",(socket) =>{
-// console.log("Connected to Browser");
-//    socket.send("hello!!!");
-
-//    socket.on("close", ()=>{
-//     console.log("연결하나 끊어짐");
-//    })
-
-//    socket.on("message",(data)=>{
-//     console.log(data.toString());
-//    })
-// });
