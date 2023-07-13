@@ -38,16 +38,20 @@ app.all('/*', function(req, res, next) {
 
 //connection event handler
 io.on('connection' , function(socket) {
-    // console.log("someone Join");
-    // console.log(io.sockets.adapter.rooms);
-    console.log(io.sockets.adapter);
-
-    socket.on('enter_room', (roomName,showRoom) => {
+    socket.on('join_room', (roomName) => {
         socket.join(roomName);
-        showRoom();
+        // done();
         socket.to(roomName).emit("welcome");
-        // console.log(socket.to(roomName));
     });
+
+    socket.on("offer",(offer,roomName)=>{
+        socket.to(roomName).emit("offer", offer);
+    })
+
+    socket.on("answer",(answer, roomName)=>{
+        socket.to(roomName).emit("answer",answer);
+    })
+
     socket.on('new_message', (roomName,nickname,message,done) => {
         // console.log(roomName);
         socket.to(roomName).emit("new_message",nickname,message);
@@ -58,7 +62,9 @@ io.on('connection' , function(socket) {
             socket.to(room).emit("bye");
         });
     })
-
+    socket.on("ice",(ice,roomName) =>{
+        socket.to(roomName).emit("ice",ice);
+    })
 })
 
 const handleListen = () => console.log("Listening on 9000");
