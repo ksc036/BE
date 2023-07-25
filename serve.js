@@ -5,7 +5,7 @@ const cors = require("cors");
 
 const app = express();
 const uri = "*";
-const port = 5000;
+const port = 4060;
 
 app.get("/",(req,res) => res.send("change"));
 
