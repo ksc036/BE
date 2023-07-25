@@ -7,7 +7,7 @@ const app = express();
 const uri = "*";
 const port = 4060;
 
-// app.get("/",(req,res) => res.send("change"));
+app.get("/",(req,res) => res.send("change"));
 
 const httpServer = https.createServer(app);
 var io = require('socket.io')(httpServer, {
