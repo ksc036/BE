@@ -1,22 +1,13 @@
-// import express from "express";
-// import http from "http";
-// import cors from 'cors';
-
 const express = require("express");
 const https = require("https");
 const cors = require("cors");
-// import WebSocket,{WebSocketServer} from "ws";
-// import {Server, Socket} from 'socket.io'; 
 
 
 const app = express();
-// const uri = "http://localhost:8081";
 const uri = "*";
+const port = 4060;
 
-// app.use(cors({ origin: 'http://localhost:8080'}));
-app.get("/",(req,res) => res.send("change"));
- 
-
+// app.get("/",(req,res) => res.send("change"));
 
 const httpServer = https.createServer(app);
 var io = require('socket.io')(httpServer, {
@@ -29,12 +20,13 @@ var io = require('socket.io')(httpServer, {
     allowEIO3: true
 });
 
-app.use(cors({
-    origin: '*',
-    // 다른 옵션들을 필요에 따라 설정할 수 있습니다.
-  }));
+
 
 //setting cors 
+app.use(cors({
+    origin: '*',
+  }));
+
 app.all('/*', function(req, res, next) {
     res.header("Access-Control-Allow-Origin", uri);
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
@@ -72,5 +64,5 @@ io.on('connection' , function(socket) {
     })
 })
 
-const handleListen = () => console.log("Listening on 4060");
-httpServer.listen(4060, handleListen);
+const handleListen = () => console.log(`Listening on ${port}`);
+httpServer.listen(port, handleListen);
