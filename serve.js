@@ -5,13 +5,11 @@ const cors = require("cors");
 
 const app = express();
 const uri = "*";
-const port = 4060;
+const port = 5000;
 
-
-const httpServer = https.createServer(app);
 app.get("/",(req,res) => res.send("change"));
 
-
+const httpServer = https.createServer(app);
 var io = require('socket.io')(httpServer, {
     cors: {
         origin: uri,
@@ -67,4 +65,4 @@ io.on('connection' , function(socket) {
 })
 
 const handleListen = () => console.log(`Listening on ${port}`);
-httpServer.listen(port, handleListen);
+app.listen(port, handleListen);
