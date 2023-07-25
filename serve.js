@@ -3,7 +3,7 @@
 // import cors from 'cors';
 
 const express = require("express");
-const http = require("http");
+const https = require("https");
 const cors = require("cors");
 // import WebSocket,{WebSocketServer} from "ws";
 // import {Server, Socket} from 'socket.io'; 
@@ -18,7 +18,7 @@ app.get("/",(req,res) => res.send("change"));
  
 
 
-const httpServer = http.createServer(app);
+const httpServer = https.createServer(app);
 var io = require('socket.io')(httpServer, {
     cors: {
         origin: uri,
@@ -67,5 +67,5 @@ io.on('connection' , function(socket) {
     })
 })
 
-const handleListen = () => console.log("Listening on 9000");
-httpServer.listen(9000, handleListen);
+const handleListen = () => console.log("Listening on 3060");
+httpServer.listen(3060, handleListen);
