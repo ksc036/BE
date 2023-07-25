@@ -33,7 +33,7 @@ app.use(cors({
     origin: '*',
     // 다른 옵션들을 필요에 따라 설정할 수 있습니다.
   }));
-  
+
 //setting cors 
 app.all('/*', function(req, res, next) {
     res.header("Access-Control-Allow-Origin", uri);
@@ -72,5 +72,5 @@ io.on('connection' , function(socket) {
     })
 })
 
-const handleListen = () => console.log("Listening on 3060");
-httpServer.listen(3060, handleListen);
+const handleListen = () => console.log("Listening on 4060");
+httpServer.listen(4060, handleListen);
