@@ -7,9 +7,11 @@ const app = express();
 const uri = "*";
 const port = 4060;
 
-app.get("/",(req,res) => res.send("change"));
 
 const httpServer = https.createServer(app);
+app.get("/",(req,res) => res.send("change"));
+
+
 var io = require('socket.io')(httpServer, {
     cors: {
         origin: uri,
