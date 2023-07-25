@@ -29,6 +29,11 @@ var io = require('socket.io')(httpServer, {
     allowEIO3: true
 });
 
+app.use(cors({
+    origin: '*',
+    // 다른 옵션들을 필요에 따라 설정할 수 있습니다.
+  }));
+  
 //setting cors 
 app.all('/*', function(req, res, next) {
     res.header("Access-Control-Allow-Origin", uri);
