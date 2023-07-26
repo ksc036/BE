@@ -66,5 +66,5 @@ io.on('connection' , function(socket) {
 })
 
 const handleListen = () => console.log(`Listening on ${port}`);
-app.listen(port, handleListen);
+httpServer.listen(port, handleListen);
 // httpServer.listen(port,handleListen);
