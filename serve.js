@@ -9,6 +9,18 @@ const port = 4060;
 
 app.get("/",(req,res) => res.send("change"));
 
+const httpServer = https.createServer(app);
+var io = require('socket.io')(httpServer, {
+    cors: {
+        origin: uri,
+        methods: ["GET", "POST"],
+        transports: ['websocket', 'polling'],
+        credentials: true
+    },
+    allowEIO3: true
+});
+
+
 //setting cors 
 app.use(cors({
     origin: uri,
@@ -20,18 +32,6 @@ app.all('/*', function(req, res, next) {
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
     next();
 });
-const httpServer = https.createServer(app);
-
-var io = require('socket.io')(httpServer, {
-    cors: {
-        origin: uri,
-        methods: ["GET", "POST"],
-        transports: ['websocket', 'polling'],
-        credentials: true
-    },
-    allowEIO3: true
-});
-
 
 
 //connection event handler
