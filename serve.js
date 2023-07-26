@@ -19,13 +19,12 @@ app.all('/*', function(req, res, next) {
     next();
 });
 app.get("/",(req,res) =>{
-     res.send("changeㄴ")});
+     res.send("change")});
 
 const httpServer = http.createServer(app);
 var io = require('socket.io')(httpServer, {
     cors: {
         origin: uri,
-        methods: ["GET", "POST"],
         transports: ['websocket', 'polling'],
         credentials: true
     },
