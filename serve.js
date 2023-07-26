@@ -6,7 +6,17 @@ const cors = require("cors");
 const app = express();
 const uri = "http://localhost:3060";
 const port = 4060;
+//setting cors 
+app.use(cors({
+    origin: uri,
+    credentials: true
+  }));
 
+app.all('/*', function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", uri);
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    next();
+});
 app.get("/",(req,res) => res.send("change"));
 
 const httpServer = http.createServer(app);
@@ -21,17 +31,7 @@ var io = require('socket.io')(httpServer, {
 });
 
 
-//setting cors 
-app.use(cors({
-    origin: uri,
-    credentials: true
-  }));
 
-app.all('/*', function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", uri);
-    res.header("Access-Control-Allow-Headers", "X-Requested-With");
-    next();
-});
 
 
 //connection event handler
