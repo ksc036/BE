@@ -19,7 +19,7 @@ app.all('/*', function(req, res, next) {
     next();
 });
 app.get("/",(req,res) =>{
-     res.send("change")});
+     res.send("changeㄴ")});
 
 const httpServer = http.createServer(app);
 var io = require('socket.io')(httpServer, {
