@@ -4,7 +4,7 @@ const cors = require("cors");
 
 
 const app = express();
-const uri = "*";
+const uri = "http://localhost:3060";
 const port = 4060;
 
 app.get("/",(req,res) => res.send("change"));
@@ -24,7 +24,8 @@ var io = require('socket.io')(httpServer, {
 
 //setting cors 
 app.use(cors({
-    origin: '*',
+    origin: uri,
+    credentials: true
   }));
 
 app.all('/*', function(req, res, next) {
@@ -66,3 +67,4 @@ io.on('connection' , function(socket) {
 
 const handleListen = () => console.log(`Listening on ${port}`);
 app.listen(port, handleListen);
+// httpServer.listen(port,handleListen);
