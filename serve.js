@@ -13,11 +13,13 @@ app.use(cors({
   }));
 
 app.all('/*', function(req, res, next) {
+    console.log(res);
     res.header("Access-Control-Allow-Origin", uri);
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
     next();
 });
-app.get("/",(req,res) => res.send("change"));
+app.get("/",(req,res) =>{
+     res.send("change")});
 
 const httpServer = http.createServer(app);
 var io = require('socket.io')(httpServer, {
@@ -27,7 +29,21 @@ var io = require('socket.io')(httpServer, {
         transports: ['websocket', 'polling'],
         credentials: true
     },
-    allowEIO3: true
+    allowEIO3: true,
+    transportOptions: {
+        polling: {
+            extraHeaders: { // Polling transport의 헤더 설정
+                "Access-Control-Allow-Origin": uri,
+                "Access-Control-Allow-Headers": "X-Requested-With"// 예: 토큰 기반 인증 헤더 추가
+              }
+        },
+        websocket: {
+          extraHeaders: { // WebSocket transport의 헤더 설정
+            "Access-Control-Allow-Origin": uri,
+            "Access-Control-Allow-Headers": "X-Requested-With"// 예: 토큰 기반 인증 헤더 추가
+          }
+        }
+      }
 });
 
 
