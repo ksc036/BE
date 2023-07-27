@@ -11,7 +11,7 @@ const cors = require("cors");
 
 const app = express();
 // const uri = "http://localhost:8081";
-const uri = "*";
+const uri = "http://localhost:8081";
 
 // app.use(cors({ origin: 'http://localhost:8080'}));
 app.get("/",(req,res) => res.send("change"));
@@ -26,7 +26,7 @@ var io = require('socket.io')(httpServer, {
         transports: ['websocket', 'polling'],
         credentials: true
     },
-    allowEIO3: true
+    allowEIO3: true,
 });
 
 //setting cors 
