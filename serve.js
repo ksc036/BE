@@ -36,12 +36,23 @@ app.all('/*', function(req, res, next) {
     next();
 });
 
+let users ={};
+let socketToRoom ={};
 //connection event handler
 io.on('connection' , function(socket) {
-    socket.on('join_room', (roomName) => {
-        socket.join(roomName);
-        // done();
-        socket.to(roomName).emit("welcome");
+    socket.on('join_room', (data) => {
+        if(users[data.roomName]){
+            users[data.roomName].push({id:socket.id, nickname : data.nickname})
+        }else{ //없으면 data.roomName
+            users[data.roomName] = [{id:socket.id, nickname : data.nickname}];
+        }
+        socketToRoom[socket.id] = data.roomName;
+        socket.join(data.roomName);
+         console.log(`[${socketToRoom[socket.id]}]: ${socket.id} enter`);
+         const usersInThisRoom = users[data.room].filter(user => user.id !== socket.id)
+        // socket.to(roomName).emit("welcome");
+        io.sockets.to(socket.id).emit('all_users', usersInThisRoom);
+        //여기까지 구현함.
     });
 
     socket.on("offer",(offer,roomName)=>{
