@@ -35,7 +35,7 @@ app.all('/*', function(req, res, next) {
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
     next();
 });
-
+//로컬최종
 let users ={};
 let socketToRoom ={};
 //connection event handler
