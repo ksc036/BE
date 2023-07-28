@@ -49,21 +49,56 @@ var io = require('socket.io')(httpServer, {
 
 
 
+//로컬최종
+let users ={};
+let socketToRoom ={};
 //connection event handler
 io.on('connection' , function(socket) {
-    socket.on('join_room', (roomName) => {
-        socket.join(roomName);
-        // done();
-        socket.to(roomName).emit("welcome");
+    socket.on('join_room', (data) => {
+        if(users[data.roomName]){
+            users[data.roomName].push({id:socket.id, nickname : data.nickname})
+        }else{ //없으면 data.roomName
+            users[data.roomName] = [{id:socket.id, nickname : data.nickname}];
+        }
+        socketToRoom[socket.id] = data.roomName;
+        socket.join(data.roomName);
+        //  console.log(`[${socketToRoom[socket.id]}]: ${socket.id} enter`);
+        console.log(users);
+        //나갈때 잘 지워줘야겠다.
+         const usersInThisRoom = users[data.roomName].filter(user => user.id !== socket.id)
+        io.sockets.to(socket.id).emit('all_users', usersInThisRoom);
     });
 
-    socket.on("offer",(offer,roomName)=>{
-        socket.to(roomName).emit("offer", offer);
+    socket.on("offer",(data)=>{
+        console.log(data.offerReceiveID);
+        socket.to(data.offerReceiveID).emit("getOffer", data);
     })
 
-    socket.on("answer",(answer, roomName)=>{
-        socket.to(roomName).emit("answer",answer);
+    socket.on("answer",(data)=>{
+        socket.to(data.answerReceiveID).emit("getAnswer",data);
     })
+
+    socket.on("candidate",(data) =>{
+        socket.to(data.candidateReceiveID).emit("getCandidate",data);
+    })
+
+    socket.on('disconnect', () => {
+        console.log(`[${socketToRoom[socket.id]}]: ${socket.id} exit`);
+        const roomID = socketToRoom[socket.id];
+        let room = users[roomID];
+        if (room) {
+            room = room.filter(user => user.id !== socket.id);
+            users[roomID] = room;
+            if (room.length === 0) {
+                delete users[roomID];
+                return;
+            }
+        }
+        socket.to(roomID).emit('user_exit', {id: socket.id});
+        console.log(users);
+    })
+
+    //여기까지 웹 RTC영상처리
 
     socket.on('new_message', (roomName,nickname,message,done) => {
         // console.log(roomName);
@@ -75,9 +110,7 @@ io.on('connection' , function(socket) {
             socket.to(room).emit("bye");
         });
     })
-    socket.on("ice",(ice,roomName) =>{
-        socket.to(roomName).emit("ice",ice);
-    })
+
 })
 
 const handleListen = () => console.log(`Listening on ${port}`);
