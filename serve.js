@@ -32,13 +32,13 @@ var io = require('socket.io')(httpServer, {
     transportOptions: {
         polling: {
             extraHeaders: { // Polling transport의 헤더 설정
-                "Access-Control-Allow-Origin": uri,
+                "Access-Control-Allow-Origin": "http://localhost:3060",
                 "Access-Control-Allow-Headers": "X-Requested-With"// 예: 토큰 기반 인증 헤더 추가
               }
         },
         websocket: {
           extraHeaders: { // WebSocket transport의 헤더 설정
-            "Access-Control-Allow-Origin": uri,
+            "Access-Control-Allow-Origin": "http://localhost:3060",
             "Access-Control-Allow-Headers": "X-Requested-With"// 예: 토큰 기반 인증 헤더 추가
           }
         }
