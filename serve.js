@@ -24,7 +24,7 @@ app.get("/",(req,res) =>{
 const httpServer = http.createServer(app);
 var io = require('socket.io')(httpServer, {
     cors: {
-        origin: uri,
+        origin: [uri,"http://localhost:3060"],
         transports: ['websocket', 'polling'],
         credentials: true
     },
