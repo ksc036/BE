@@ -5,7 +5,7 @@ const cors = require("cors");
 
 const app = express();
 // const uri = "wss://i9a701.p.ssafy.io/";
-const uri= "http://localhost:3060/";
+const uri= "http://localhost:3060";
 const port = 4060;
 //setting cors 
 app.use(cors({
