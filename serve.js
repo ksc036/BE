@@ -55,6 +55,8 @@ let users ={};
 let socketToRoom ={};
 //connection event handler
 io.on('connection' , function(socket) {
+    console.log("-----------------------------------------------")
+    console.log(socket);
     socket.on('join_room', (data) => {
         if(users[data.roomName]){
             users[data.roomName].push({id:socket.id, nickname : data.nickname})
