@@ -5,17 +5,17 @@ const cors = require("cors");
 
 const app = express();
 const uri = "wss://i9a701.p.ssafy.io/";
-const uri2= "wss://localhost:3060";
+const uri2= "http://localhost:3060";
 const port = 4060;
 //setting cors 
 app.use(cors({
-    origin: uri,
+    origin: [uri,uri2],
     credentials: true
   }));
 
 app.all('/*', function(req, res, next) {
     console.log(res);
-    res.header("Access-Control-Allow-Origin", uri);
+    res.header("Access-Control-Allow-Origin", uri2);
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
     next();
 });
