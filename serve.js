@@ -114,6 +114,7 @@ io.on('connection' , function(socket) {
     })
 
     socket.on('send_message', (chat) => {
+        console.log(chat);
         socket.to(chat.roomName).emit("receive_message",chat);
     });
 
