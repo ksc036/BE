@@ -55,8 +55,6 @@ let users ={};
 let socketToRoom ={};
 //connection event handler
 io.on('connection' , function(socket) {
-    console.log("-----------------------------------------------")
-    console.log(socket);
     socket.on('join_room', (data) => {
         if(users[data.roomName]){
             users[data.roomName].push({id:socket.id, nickname : data.nickname})
@@ -108,11 +106,16 @@ io.on('connection' , function(socket) {
         socket.to(roomName).emit("new_message",nickname,message);
         done(message);
     });
+
     socket.on("disconnecting", () =>{
         socket.rooms.forEach(room => {
             socket.to(room).emit("bye");
         });
     })
+
+    socket.on('send_message', (chat) => {
+        socket.to(chat.roomName).emit("receive_message",chat);
+    });
 
 })
 
